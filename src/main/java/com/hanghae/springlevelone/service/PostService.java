@@ -21,9 +21,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class PostService {
-    private final UserRepository userRepository;
     private final PostRepository postRepository;
-    private final JwtUtil jwtUtil;
 
     @Transactional
     public ResponseEntity<Object> createPost(PostRequestDto postRequestDto, User user) {
