@@ -4,6 +4,7 @@ import com.hanghae.springlevelone.dto.PostRequestDto;
 import com.hanghae.springlevelone.dto.PostResponseDto;
 import com.hanghae.springlevelone.entity.Post;
 import com.hanghae.springlevelone.entity.User;
+import com.hanghae.springlevelone.entity.UserOrAdminEnum;
 import com.hanghae.springlevelone.jwt.JwtUtil;
 import com.hanghae.springlevelone.repository.PostRepository;
 import com.hanghae.springlevelone.repository.UserRepository;
@@ -25,13 +26,7 @@ public class PostService {
     private final JwtUtil jwtUtil;
 
     @Transactional
-    public ResponseEntity<Object> createPost(PostRequestDto postRequestDto, HttpServletRequest request) {
-        Claims claims = getClaimsFromToken(request);
-        if (claims == null) {
-            return ResponseEntity.badRequest().body("토큰이 유효하지 않습니다.");
-        }
-        User user = userRepository.findByUsername(claims.getSubject());
-
+    public ResponseEntity<Object> createPost(PostRequestDto postRequestDto, User user) {
         Post post = postRepository.saveAndFlush(new Post(postRequestDto));
         post.setUser(user);
 
@@ -52,14 +47,10 @@ public class PostService {
     }
 
     @Transactional
-    public ResponseEntity<Object> updatePost(Long id, PostRequestDto postRequestDto, HttpServletRequest request) {
-        Claims claims = getClaimsFromToken(request);
-        if (claims == null) {
-            return ResponseEntity.badRequest().body("토큰이 유효하지 않습니다.");
-        }
+    public ResponseEntity<Object> updatePost(Long id, PostRequestDto postRequestDto, User user) {
 
         Post post = checkPost(id);
-        if (!userCheck(post, claims)) {
+        if (!userCheck(post, user)) {
             return ResponseEntity.badRequest().body("수정 / 삭제 권한이 없습니다.");
         }
 
@@ -67,14 +58,10 @@ public class PostService {
         return ResponseEntity.ok().body(new PostResponseDto(post));
     }
 
-    public ResponseEntity<Object> deletePost(Long id, HttpServletRequest request) {
-        Claims claims = getClaimsFromToken(request);
-        if (claims == null) {
-            return ResponseEntity.badRequest().body("토큰이 유효하지 않습니다.");
-        }
+    public ResponseEntity<Object> deletePost(Long id, User user) {
 
         Post post = checkPost(id);
-        if (!userCheck(post, claims)) {
+        if (!userCheck(post, user)) {
             return ResponseEntity.badRequest().body("수정 / 삭제 권한이 없습니다.");
         }
 
@@ -90,19 +77,10 @@ public class PostService {
         );
     }
 
-    //토큰 유효성 검사 후 claims 반환
-    private Claims getClaimsFromToken(HttpServletRequest request) {
-        String token = jwtUtil.resolveToken(request);
-        if (token == null || !jwtUtil.validateToken(token)) {
-            return null;
-        }
-        return jwtUtil.getInfoFromToken(token);
-    }
-
     //사용자 유효성 검사
-    public boolean userCheck(Post post, Claims claims) {
-        if (!post.getUser().getUsername().equals(claims.getSubject())) {
-            if (claims.get("auth").equals("ADMIN")) {
+    public boolean userCheck(Post post, User user) {
+        if (!post.getUser().getUsername().equals(user.getUsername())) {
+            if (user.getAdmin().equals(UserOrAdminEnum.ADMIN)) {
                 return true;
             } else {
                 return false;

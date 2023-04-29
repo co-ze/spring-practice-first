@@ -5,13 +5,14 @@ import com.hanghae.springlevelone.dto.SignupRequestDto;
 import com.hanghae.springlevelone.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {

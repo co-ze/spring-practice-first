@@ -8,24 +8,27 @@ import com.hanghae.springlevelone.jwt.JwtUtil;
 import com.hanghae.springlevelone.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public ResponseEntity<Object> signup(SignupRequestDto signupRequestDto) {
         String username = signupRequestDto.getUsername();
-        String password = signupRequestDto.getPassword();
+        String password = passwordEncoder.encode(signupRequestDto.getPassword());
 
-        User user = userRepository.findByUsername(username);
-        if (user != null) {
+        Optional<User> isCreated =userRepository.findByUsername(username);
+        if (isCreated.isPresent()) {
             return ResponseEntity.badRequest().body("중복된 아이디 입니다.");
         }
 
@@ -34,7 +37,7 @@ public class UserService {
             userOrAdmin = UserOrAdminEnum.ADMIN;
         }
 
-        user = new User(username, password, userOrAdmin);
+        User user = new User(username, password, userOrAdmin);
         userRepository.save(user);
 
         return ResponseEntity.ok().body("회원가입 성공");
@@ -45,10 +48,10 @@ public class UserService {
         String username = loginRequestDto.getUsername();
         String password = loginRequestDto.getPassword();
 
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findUserByUsername(username);
         if (user == null) return ResponseEntity.badRequest().body("아이디 정보를 찾을 수 없습니다.");
 
-        if (!user.getPassword().equals(password)) {
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             return ResponseEntity.badRequest().body("비밀번호를 확인해주세요.");
         }
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(), user.getAdmin()));
