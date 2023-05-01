@@ -5,16 +5,12 @@ import com.hanghae.springlevelone.dto.PostResponseDto;
 import com.hanghae.springlevelone.entity.Post;
 import com.hanghae.springlevelone.entity.User;
 import com.hanghae.springlevelone.entity.UserOrAdminEnum;
-import com.hanghae.springlevelone.jwt.JwtUtil;
 import com.hanghae.springlevelone.repository.PostRepository;
-import com.hanghae.springlevelone.repository.UserRepository;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +21,7 @@ public class PostService {
 
     @Transactional
     public ResponseEntity<Object> createPost(PostRequestDto postRequestDto, User user) {
+
         Post post = postRepository.saveAndFlush(new Post(postRequestDto));
         post.setUser(user);
 
@@ -36,6 +33,7 @@ public class PostService {
         return postRepository.findAllByOrderByCreatedAtDesc().stream().map(PostResponseDto::new).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public PostResponseDto getPost(Long id) {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new NullPointerException("해당 게시글이 존재하지 않습니다.")

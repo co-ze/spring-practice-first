@@ -1,6 +1,5 @@
 package com.hanghae.springlevelone.dto;
 
-import com.hanghae.springlevelone.entity.Comment;
 import com.hanghae.springlevelone.entity.Post;
 import lombok.Getter;
 

@@ -6,7 +6,6 @@ import com.hanghae.springlevelone.entity.Comment;
 import com.hanghae.springlevelone.entity.Post;
 import com.hanghae.springlevelone.entity.User;
 import com.hanghae.springlevelone.entity.UserOrAdminEnum;
-import com.hanghae.springlevelone.jwt.JwtUtil;
 import com.hanghae.springlevelone.repository.CommentsRepository;
 import com.hanghae.springlevelone.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
