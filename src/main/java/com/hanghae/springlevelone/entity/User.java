@@ -5,7 +5,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -28,6 +30,12 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     List<Post> posts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    List<PostLike> postLikeList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    Set<CommentLike> commentLikeList = new HashSet<>();
 
     public User(String username, String password, UserOrAdminEnum userOrAdminEnum) {
         this.username = username;

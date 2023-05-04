@@ -13,6 +13,7 @@ public class PostResponseDto {
     private final String title;
     private final String username;
     private final String post;
+    private final int postLike;
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
     private List<CommentsResponseDto> comments;
@@ -22,6 +23,7 @@ public class PostResponseDto {
         this.title = post.getTitle();
         this.username = post.getUser().getUsername();
         this.post = post.getPost();
+        this.postLike = post.getLikeList().size();
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();
         this.comments = post.getCommentsList().stream().map(CommentsResponseDto::new).collect(Collectors.toList());

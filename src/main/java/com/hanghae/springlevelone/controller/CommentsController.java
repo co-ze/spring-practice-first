@@ -9,8 +9,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/blog/comment")
@@ -23,7 +21,7 @@ public class CommentsController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateComment(@RequestBody CommentsRequestDto commentsRequestDto, @PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails)   {
+    public ResponseEntity<Object> updateComment(@RequestBody CommentsRequestDto commentsRequestDto, @PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return commentsService.updateComment(commentsRequestDto, id, userDetails.getUser());
     }
 

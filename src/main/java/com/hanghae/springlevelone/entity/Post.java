@@ -25,6 +25,9 @@ public class Post extends Timestamped{
     @ManyToOne()
     private User user;
 
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    List<PostLike> likeList = new ArrayList<>();
+
     @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL)
     List<Comment> commentsList = new ArrayList<>();
 

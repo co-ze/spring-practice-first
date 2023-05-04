@@ -41,7 +41,6 @@ public class PostService {
 
         return new PostResponseDto(post);
     }
-
     @Transactional
     public ResponseEntity<Object> updatePost(Long id, PostRequestDto postRequestDto, User user) {
 

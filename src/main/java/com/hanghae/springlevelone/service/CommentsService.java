@@ -40,7 +40,7 @@ public class CommentsService {
         );
 
         if (!userCheck(comment, user)) {
-            return ResponseEntity.badRequest().body("수정 / 삭제 권한이 없습니다.");
+            throw new IllegalArgumentException("작성자만 수정/삭제 할 수 있습니다.");
         }
         comment.update(commentsRequestDto);
 
@@ -55,7 +55,7 @@ public class CommentsService {
         );
 
         if (!userCheck(comment, user)) {
-            return ResponseEntity.badRequest().body("수정 / 삭제 권한이 없습니다.");
+            throw new IllegalArgumentException("작성자만 수정/삭제 할 수 있습니다.");
         }
         commentsRepository.delete(comment);
 

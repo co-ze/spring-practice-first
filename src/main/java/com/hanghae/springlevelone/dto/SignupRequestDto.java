@@ -15,7 +15,7 @@ public class SignupRequestDto {
     private String username;
 
     @Size(min = 8, max = 15, message = "비밀번호는 8~15자리이어야 합니다.")
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$", message = "password 형식 : 대소문자, 숫자, 특수문자(@,$,!,%,*,?,&)만 입력가능 및 하나 씩 포함 해야 함.")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$", message = "비밀번호는 대소문자, 숫자, 특수문자(@,$,!,%,*,?,&)만 입력가능 및 하나 씩 포함 해야 함.")
     private String password;
 
     private boolean admin = false;
